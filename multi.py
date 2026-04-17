@@ -8,7 +8,6 @@ class HabitManager:
         self.db = Database()
         self.habits = {}
 
-        # Load habits from DB
         for name in self.db.get_habits():
             habit = Habit(name)
             logs = self.db.get_logs_for_habit(name)
@@ -22,6 +21,15 @@ class HabitManager:
 
         self.db.add_habit(name)
         self.habits[name] = Habit(name)
+
+    def delete_habit(self, name):
+        if name not in self.habits:
+            print("Habit not found")
+            return
+
+        self.db.delete_habit(name)
+        del self.habits[name]
+        print("Habit deleted")
 
     def get_habit(self, name):
         return self.habits.get(name)
@@ -41,7 +49,6 @@ class HabitManager:
         self.db.add_log(name, actual_day.isoformat())
 
 
-# ---------------- TEST ----------------
 if __name__ == "__main__":
     m = HabitManager()
 
@@ -51,7 +58,10 @@ if __name__ == "__main__":
         print("2. Mark Habit Done")
         print("3. View All Habits")
         print("4. View Streak")
-        print("5. Exit")
+        print("5. View 6-Month Stats")
+        print("6. Delete Habit")
+        print("7. Show 6-Month Graph")
+        print("8. Exit")
 
         choice = input("Choose option: ")
 
@@ -76,6 +86,28 @@ if __name__ == "__main__":
                 print("Habit not found")
 
         elif choice == "5":
+            name = input("Enter habit name: ")
+            habit = m.get_habit(name)
+            if habit:
+                stats = habit.stats_last_6_months()
+                print("Total completed (6 months):", stats["total_completed"])
+                print("Consistency:", stats["consistency_percent"], "%")
+            else:
+                print("Habit not found")
+
+        elif choice == "6":
+            name = input("Enter habit name to delete: ")
+            m.delete_habit(name)
+
+        elif choice == "7":
+            name = input("Enter habit name: ")
+            habit = m.get_habit(name)
+            if habit:
+                habit.plot_last_6_months()
+            else:
+                print("Habit not found")
+
+        elif choice == "8":
             print("Goodbye 👋")
             break
 

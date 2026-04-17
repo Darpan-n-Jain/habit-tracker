@@ -66,3 +66,19 @@ class Database:
         """, (habit_name,))
 
         return [row[0] for row in cursor.fetchall()]
+
+    def delete_habit(self, name):
+        cursor = self.conn.cursor()
+
+        cursor.execute("SELECT id FROM habits WHERE name = ?", (name,))
+        result = cursor.fetchone()
+
+        if not result:
+            return
+
+        habit_id = result[0]
+
+        cursor.execute("DELETE FROM habit_logs WHERE habit_id = ?", (habit_id,))
+        cursor.execute("DELETE FROM habits WHERE id = ?", (habit_id,))
+
+        self.conn.commit()

@@ -44,3 +44,27 @@ class Habit:
                 current = 1
 
         return longest
+    def plot_last_6_months(self):
+        import matplotlib.pyplot as plt
+        from datetime import date, timedelta
+
+        today = date.today()
+        six_months_ago = today - timedelta(days=180)
+
+        days_range = []
+        completion = []
+
+        current = six_months_ago
+        while current <= today:
+            days_range.append(current)
+            completion.append(1 if current in self.completed_days else 0)
+            current += timedelta(days=1)
+
+        plt.figure()
+        plt.plot(days_range, completion)
+        plt.title(f"{self.name} - Last 6 Months Activity")
+        plt.xlabel("Date")
+        plt.ylabel("Completed (1=yes, 0=no)")
+        plt.xticks(rotation=45)
+        plt.tight_layout()
+        plt.show()
