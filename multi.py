@@ -61,7 +61,8 @@ if __name__ == "__main__":
         print("5. View 6-Month Stats")
         print("6. Delete Habit")
         print("7. Show 6-Month Graph")
-        print("8. Exit")
+        print("8. Heatmap (Last 3 Months)")
+        print("9. Exit")
 
         choice = input("Choose option: ")
 
@@ -108,6 +109,15 @@ if __name__ == "__main__":
                 print("Habit not found")
 
         elif choice == "8":
+            name = input("Enter habit name: ")
+            habit = m.get_habit(name)
+
+            if habit:
+                habit.heatmap_last_3_months()
+            else:
+                print("Habit not found")
+
+        elif choice == "9":
             print("Goodbye 👋")
             break
 
